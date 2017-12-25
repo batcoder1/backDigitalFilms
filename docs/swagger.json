@@ -1,0 +1,454 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a simple movie database",
+    "version": "1.0.0",
+    "title": "DO Frontend Test",
+    "contact": {
+      "email": "javier@digitalorigin.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost:3001",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "login",
+      "description": "Authentication Service"
+    },
+    {
+      "name": "movies",
+      "description": "Access to movie info"
+    },
+    {
+      "name": "user",
+      "description": "User related info"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "login"
+        ],
+        "summary": "Authenticate in application",
+        "description": "",
+        "operationId": "loginApplication",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Pet object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesfull login",
+            "schema": {
+              "$ref": "#/definitions/LoginResponse"
+            }
+          },
+          "401": {
+            "description": "No valid credentials"
+          },
+          "422": {
+            "description": "Bad body data"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "Create a new user",
+        "operationId": "createUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Bad body data"
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Message"
+            },
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/favorites": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get list of favorites movies",
+        "description": "",
+        "operationId": "getFavoritesMovies",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "movies": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Add a movie to my favorite list",
+        "description": "",
+        "operationId": "addMovieToFavorite",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Id information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "movieDBId": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/movies/": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Discovery movies, get last movies",
+        "description": "",
+        "operationId": "discoveryMovies",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "no authenticated"
+          },
+          "default": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "movies": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/{movieDbId}": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Get movie information",
+        "description": "",
+        "operationId": "getMovieInformation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "movieDbId",
+            "in": "path",
+            "description": "The movieDBId that you are looking",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "no authenticated"
+          },
+          "default": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "movie": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/configuration": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Get movies configuration",
+        "description": "",
+        "operationId": "getMoviesConfiguration",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Configuration"
+            }
+          },
+          "401": {
+            "description": "unauthorized"
+          }
+        }
+      }
+    },
+    "/movies/search": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Search movie by name",
+        "description": "",
+        "operationId": "searchMovieByName",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "name of movie",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "movies": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Movie"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "definitions": {
+    "Login": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Movie": {
+      "type": "object",
+      "properties": {
+        "poster_path": {
+          "type": "string"
+        },
+        "backdrop_path": {
+          "type": "string"
+        },
+        "overview": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "original_title": {
+          "type": "string"
+        }
+      }
+    },
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "images": {
+          "type": "object",
+          "properties": {
+            "base_url": {
+              "type": "string"
+            },
+            "secure_base_url": {
+              "type": "string"
+            },
+            "backdrop_sizes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "logo_sizes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "poster_sizes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "profile_sizes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "still_sizes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    }
+  }
+}
